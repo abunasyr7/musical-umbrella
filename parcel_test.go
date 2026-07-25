@@ -39,6 +39,9 @@ func TestAddGetDelete(t *testing.T) {
 	parcel := getTestParcel()
 
 	// add
+	id, err := store.Add(parcel)
+	require.NoError(t, err)
+	require.NotZero(t, id)
 	// добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
 
 	// get
@@ -93,6 +96,8 @@ func TestGetByClient(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
+	store := NewParcelStore(db)
+
 	parcels := []Parcel{
 		getTestParcel(),
 		getTestParcel(),
@@ -108,7 +113,8 @@ func TestGetByClient(t *testing.T) {
 
 	// add
 	for i := 0; i < len(parcels); i++ {
-		id, err := // добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
+		id, err := store.Add(parcels[i])
+		require.NoError(t, err)
 
 		// обновляем идентификатор добавленной у посылки
 		parcels[i].Number = id
@@ -118,7 +124,8 @@ func TestGetByClient(t *testing.T) {
 	}
 
 	// get by client
-	storedParcels, err := // получите список посылок по идентификатору клиента, сохранённого в переменной client
+	storedParcels, err := store.GetByClient(client)
+	require.NoError(t, err)
 	// убедитесь в отсутствии ошибки
 	// убедитесь, что количество полученных посылок совпадает с количеством добавленных
 
