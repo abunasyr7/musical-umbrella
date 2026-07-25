@@ -67,6 +67,7 @@ func TestSetAddress(t *testing.T) {
 	// set address
 	// обновите адрес, убедитесь в отсутствии ошибки
 	newAddress := "new test address"
+	_ = newAddress
 
 	// check
 	// получите добавленную посылку и убедитесь, что адрес обновился
@@ -130,7 +131,7 @@ func TestGetByClient(t *testing.T) {
 	// убедитесь, что количество полученных посылок совпадает с количеством добавленных
 
 	// check
-	for _, parcel := range storedParcels {
+	for range storedParcels  {
 		// в parcelMap лежат добавленные посылки, ключ - идентификатор посылки, значение - сама посылка
 		// убедитесь, что все посылки из storedParcels есть в parcelMap
 		// убедитесь, что значения полей полученных посылок заполнены верно
