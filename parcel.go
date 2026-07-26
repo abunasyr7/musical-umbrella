@@ -59,7 +59,10 @@ func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
 }
 
 func (s ParcelStore) SetStatus(number int, status string) error {
-	// реализуйте обновление статуса в таблице parcel
+	_, err := s.db.Exec("update parcel set status = ? where number = ?", status, number)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
