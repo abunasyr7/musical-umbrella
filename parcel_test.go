@@ -51,12 +51,17 @@ func TestAddGetDelete(t *testing.T) {
 	require.Equal(t, parcel.Status, stored.Status)
 	require.Equal(t, parcel.Address, stored.Address)
 	require.Equal(t, parcel.CreatedAt, stored.CreatedAt)
-	// получите добавленную посылку и убедитесь в отсутствии ошибки
-	// проверьте, что значения полей полученной посылки совпадают с добавленной
+
 
 	// delete
+	err = store.Delete(id)
+	require.NoError(t, err)
 	// удалите добавленную посылку, убедитесь в отсутствии ошибки
-	// проверьте, что посылку больше нельзя получить из БД
+
+	// check
+	_, err = store.Get(id)
+	require.Error(t, err)
+	// получите удалённую посылку и убедитесь, что она не найдена
 }
 
 // TestSetAddress проверяет обновление адреса
