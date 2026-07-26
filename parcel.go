@@ -39,11 +39,21 @@ func (s ParcelStore) Get(number int) (Parcel, error) {
 }
 
 func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
-	// реализуйте чтение строк из таблицы parcel по заданному client
-	// здесь из таблицы может вернуться несколько строк
+	rows, err := s.db.Query("select number, client, status, address, created_at from parcel where client = ?", client)
+	if err != nil {
+		return []Parcel{}, err
+	}
+	defer rows.Close()
 
-	// заполните срез Parcel данными из таблицы
 	var res []Parcel
+	for rows.Next() {
+		p := Parcel{}
+		err := rows.Scan(&p.Number, &p.Client, &p.Status, &p.Address, &p.CreatedAt)
+		if err != nil {
+			return []Parcel{}, err
+		}
+		res = append(res, p)
+	}
 
 	return res, nil
 }
