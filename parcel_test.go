@@ -97,7 +97,8 @@ func TestSetStatus(t *testing.T) {
 	db, err := sql.Open("sqlite", "tracker.db") // настройте подключение к БД
 	require.NoError(t, err)
 	defer db.Close()
-
+	store := NewParcelStore(db)
+	parcel := getTestParcel()
 	// add
 	id, err := store.Add(parcel)
 	require.NoError(t, err)
@@ -152,11 +153,12 @@ func TestGetByClient(t *testing.T) {
 	require.NoError(t, err)
 	// убедитесь в отсутствии ошибки
 	// убедитесь, что количество полученных посылок совпадает с количеством добавленных
+	require.Len(t, storedParcels, len(parcels))
 
 	// check
-	for range storedParcels  {
-		// в parcelMap лежат добавленные посылки, ключ - идентификатор посылки, значение - сама посылка
-		// убедитесь, что все посылки из storedParcels есть в parcelMap
-		// убедитесь, что значения полей полученных посылок заполнены верно
+	for _, parcel := range storedParcels {
+		expected, ok := parcelMap[parcel.Number]
+		require.True(t, ok)
+		require.Equal(t, expected, parcel)
 	}
 }
