@@ -69,18 +69,25 @@ func TestSetAddress(t *testing.T) {
 	// prepare
 	db, err := sql.Open("sqlite", "tracker.db")// настройте подключение к БД
 	require.NoError(t, err)
-
+	store := NewParcelStore(db)
+	parcel := getTestParcel()
 	defer db.Close()
 
 	// add
-	// добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
-
+	id, err := store.Add(parcel)
+	require.NoError(t, err)
+	require.NotZero(t, id)
+	
 	// set address
 	// обновите адрес, убедитесь в отсутствии ошибки
 	newAddress := "new test address"
-	_ = newAddress
+	err = store.SetAddress(id, newAddress)
+	require.NoError(t, err)
 
 	// check
+	stored, err := store.Get(id)
+	require.NoError(t, err)
+	require.Equal(t, newAddress, stored.Address)
 	// получите добавленную посылку и убедитесь, что адрес обновился
 }
 
